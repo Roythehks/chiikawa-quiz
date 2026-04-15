@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>你最像哪個吉伊卡娃角色？</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #FFFDF7;
+      color: #292524;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px 64px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    /* ─── SCREENS ─────────────────────────── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ─── INTRO ───────────────────────────── */
+    .intro-header {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+
+    .intro-characters {
+      margin-bottom: 24px;
+    }
+
+    .intro-characters img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      border-radius: 24px;
+      box-shadow: 2px 3px 0 rgba(180,83,9,0.15);
+    }
+
+    .intro-title {
+      font-family: 'Kalam', cursive;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #292524;
+      margin-bottom: 12px;
+    }
+
+    .intro-sub {
+      font-size: 16px;
+      color: #78716C;
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    .intro-card {
+      background: #FEF9EF;
+      border: 1px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 1px 1px 3px rgba(41,37,36,0.06);
+      margin-bottom: 32px;
+    }
+
+    .intro-card-title {
+      font-family: 'Kalam', cursive;
+      font-size: 20px;
+      font-weight: 700;
+      color: #B45309;
+      margin-bottom: 12px;
+    }
+
+    .intro-card p {
+      font-size: 15px;
+      color: #57534E;
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+
+    .intro-card p:last-child { margin-bottom: 0; }
+
+    .dims-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .dim-chip {
+      background: #FDF4E0;
+      border: 1px solid #E7E5E4;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .dim-chip .dim-code {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      color: #B45309;
+      display: block;
+    }
+
+    .dim-chip .dim-name {
+      font-size: 12px;
+      color: #78716C;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: #B45309;
+      color: #FFFFFF;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 32px;
+      cursor: pointer;
+      transition: background 0.18s ease;
+      text-align: center;
+    }
+
+    .btn-primary:hover { background: #92400E; }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-primary:disabled:hover { background: #B45309; }
+
+    /* ─── PROGRESS ────────────────────────── */
+    .progress-wrap {
+      margin-bottom: 32px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #A8A29E;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress-count {
+      font-size: 13px;
+      font-weight: 500;
+      color: #78716C;
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background: #E7E5E4;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #B45309;
+      border-radius: 9999px;
+      transition: width 0.35s ease;
+    }
+
+    /* ─── QUESTION ────────────────────────── */
+    .question-card {
+      background: #FEF9EF;
+      border: 1px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 28px 24px 24px;
+      box-shadow: 1px 1px 3px rgba(41,37,36,0.06);
+      margin-bottom: 20px;
+    }
+
+    .question-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: #B45309;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-family: 'Kalam', cursive;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: #292524;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #FFFDF7;
+      border: 1.5px solid #E7E5E4;
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .option-btn:hover {
+      border-color: #B45309;
+      background: #FDF4E0;
+      box-shadow: 2px 3px 0 rgba(180,83,9,0.15);
+    }
+
+    .option-btn.selected {
+      border-color: #B45309;
+      background: #FDF4E0;
+      box-shadow: 2px 3px 0 rgba(180,83,9,0.15);
+    }
+
+    .option-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: #E7E5E4;
+      color: #78716C;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+      margin-top: 1px;
+    }
+
+    .option-btn.selected .option-letter {
+      background: #B45309;
+      color: #FFFFFF;
+    }
+
+    .option-text {
+      font-size: 15px;
+      color: #44403C;
+      line-height: 1.6;
+    }
+
+    .option-btn.selected .option-text { color: #292524; }
+
+    /* ─── RESULT ──────────────────────────── */
+    .result-header {
+      text-align: center;
+      padding: 40px 0 28px;
+    }
+
+    .result-icon-wrap {
+      width: 160px;
+      height: 160px;
+      border-radius: 24px;
+      overflow: hidden;
+      margin: 0 auto 24px;
+      border: 1.5px solid #E7E5E4;
+      box-shadow: 2px 3px 0 rgba(180,83,9,0.15);
+      background: #FEF9EF;
+      position: relative;
+    }
+
+    .result-icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .result-icon-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #D6D3D1;
+    }
+
+    .result-icon-placeholder svg {
+      width: 40px;
+      height: 40px;
+      opacity: 0.5;
+    }
+
+    .result-icon-placeholder span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #C8C4C0;
+      text-transform: uppercase;
+    }
+
+    .result-badge {
+      display: inline-block;
+      background: #FDF4E0;
+      border: 1px solid #E7E5E4;
+      border-radius: 8px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #B45309;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .result-name {
+      font-family: 'Kalam', cursive;
+      font-size: 40px;
+      font-weight: 700;
+      color: #292524;
+      margin-bottom: 8px;
+    }
+
+    .result-tagline {
+      font-size: 17px;
+      color: #78716C;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .result-card {
+      background: #FEF9EF;
+      border: 1px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 1px 1px 3px rgba(41,37,36,0.06);
+      margin-bottom: 16px;
+    }
+
+    .result-section-title {
+      font-family: 'Kalam', cursive;
+      font-size: 18px;
+      font-weight: 700;
+      color: #B45309;
+      margin-bottom: 12px;
+    }
+
+    .result-pattern {
+      font-size: 15px;
+      color: #44403C;
+      line-height: 1.7;
+    }
+
+    .result-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .result-list li {
+      font-size: 15px;
+      color: #44403C;
+      line-height: 1.6;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .result-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #B45309;
+      font-weight: 700;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .result-grid .result-card { margin-bottom: 0; }
+
+    .result-quote-card {
+      background: #292524;
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 2px 3px 0 rgba(180,83,9,0.15);
+    }
+
+    .result-quote {
+      font-family: 'Kalam', cursive;
+      font-size: 20px;
+      color: #FFFDF7;
+      line-height: 1.5;
+    }
+
+    .result-quote::before { content: '「'; }
+    .result-quote::after  { content: '」'; }
+
+    .scores-wrap {
+      background: #FEF9EF;
+      border: 1px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .scores-title {
+      font-family: 'Kalam', cursive;
+      font-size: 16px;
+      font-weight: 700;
+      color: #78716C;
+      margin-bottom: 14px;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .score-row:last-child { margin-bottom: 0; }
+
+    .score-dim {
+      font-weight: 700;
+      font-size: 12px;
+      color: #B45309;
+      width: 30px;
+      flex-shrink: 0;
+    }
+
+    .score-bar-bg {
+      flex: 1;
+      height: 7px;
+      background: #E7E5E4;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: #B45309;
+      border-radius: 9999px;
+      transition: width 0.6s ease;
+    }
+
+    .score-val {
+      font-size: 12px;
+      color: #A8A29E;
+      width: 24px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .btn-restart {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: #B45309;
+      border: 1.5px solid #B45309;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+      text-align: center;
+    }
+
+    .btn-restart:hover { background: #FDF4E0; }
+
+    /* ─── RADAR CHART ─────────────────────── */
+    .radar-wrap {
+      background: #FEF9EF;
+      border: 1px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 28px 24px 20px;
+      box-shadow: 1px 1px 3px rgba(41,37,36,0.06);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .radar-title {
+      font-family: 'Kalam', cursive;
+      font-size: 18px;
+      font-weight: 700;
+      color: #B45309;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .radar-svg-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ─── DIM EXPLAIN ─────────────────────── */
+    .dim-explain-wrap {
+      background: #FEF9EF;
+      border: 1px solid #E7E5E4;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 1px 1px 3px rgba(41,37,36,0.06);
+      margin-bottom: 16px;
+    }
+
+    .dim-explain-title {
+      font-family: 'Kalam', cursive;
+      font-size: 18px;
+      font-weight: 700;
+      color: #B45309;
+      margin-bottom: 16px;
+    }
+
+    .dim-explain-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dim-explain-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .dim-explain-badge {
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 9999px;
+      background: #B45309;
+      color: #FFFDF7;
+      font-weight: 700;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.03em;
+    }
+
+    .dim-explain-body {}
+
+    .dim-explain-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: #292524;
+      margin-bottom: 2px;
+    }
+
+    .dim-explain-desc {
+      font-size: 13px;
+      color: #78716C;
+      line-height: 1.6;
+    }
+
+    /* ─── RESPONSIVE ──────────────────────── */
+    @media (max-width: 480px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+      .dims-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .intro-characters img { width: 160px; height: 160px; }
+      .intro-title { font-size: 28px; }
+      .result-name { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ══════════════ INTRO ══════════════ -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro-header">
+      <div class="intro-characters">
+        <img src="photos/chiikawa.png" alt="吉伊卡娃">
+      </div>
+      <h1 class="intro-title">你最像哪一個吉伊卡娃角色？</h1>
+      <p class="intro-sub">從你在群聊、工作、關係與日常小場面裡的反應，<br>看出你的社交生存模式。</p>
+    </div>
+
+    <div class="intro-card">
+      <div class="intro-card-title">測驗說明</div>
+      <p>這是一份以日常情境為基礎的娛樂型人格測驗，它不是臨床心理工具，只是用輕鬆可代入的方式，整理你在社交與壓力中的習慣反應。</p>
+      <p>如果你發現自己有好幾個角色都很像，很正常，因為人本來就不是單一面向。</p>
+    </div>
+
+    <div class="intro-card">
+      <div class="intro-card-title">作答方式</div>
+      <p>每題請選出「最像你平常第一反應」的一個選項。<br>不用選理想中的自己，只要選最常出現的你。</p>
+    </div>
+
+    <div class="intro-card">
+      <div class="intro-card-title">六個向度</div>
+      <div class="dims-grid">
+        <div class="dim-chip"><span class="dim-code">AN</span><span class="dim-name">安心節奏 — 求穩、求熟悉</span></div>
+        <div class="dim-chip"><span class="dim-code">CA</span><span class="dim-name">關照共感 — 顧到別人感受</span></div>
+        <div class="dim-chip"><span class="dim-code">MO</span><span class="dim-name">即刻行動 — 先動起來再修</span></div>
+        <div class="dim-chip"><span class="dim-code">SP</span><span class="dim-name">表現存在 — 在意被看見</span></div>
+        <div class="dim-chip"><span class="dim-code">ST</span><span class="dim-name">穩場定力 — 把節奏收住</span></div>
+        <div class="dim-chip"><span class="dim-code">GR</span><span class="dim-name">成長韌性 — 慢慢往前走</span></div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startQuiz()">開始測驗（共 16 題）</button>
+  </div>
+
+  <!-- ══════════════ QUIZ ══════════════ -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="progress-label">進度</span>
+        <span class="progress-count" id="progress-count">1 / 16</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-num" id="question-num">題目 01</div>
+      <div class="question-text" id="question-text"></div>
+    </div>
+
+    <div class="options-list" id="options-list"></div>
+
+    <button class="btn-primary" id="btn-next" disabled onclick="nextQuestion()">下一題 →</button>
+  </div>
+
+  <!-- ══════════════ RESULT ══════════════ -->
+  <div id="screen-result" class="screen">
+    <div class="result-header">
+      <div class="result-icon-wrap" id="result-icon-wrap">
+        <div class="result-icon-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          <span>照片</span>
+        </div>
+      </div>
+      <div class="result-badge">你的吉伊卡娃類型</div>
+      <div class="result-name" id="result-name"></div>
+      <div class="result-tagline" id="result-tagline"></div>
+    </div>
+
+    <div class="result-card" style="margin-bottom:16px">
+      <div class="result-section-title">你的社交模式</div>
+      <div class="result-pattern" id="result-pattern"></div>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-section-title">✨ 優勢</div>
+        <ul class="result-list" id="result-strengths"></ul>
+      </div>
+      <div class="result-card">
+        <div class="result-section-title">🔍 盲點</div>
+        <ul class="result-list" id="result-blindspots"></ul>
+      </div>
+    </div>
+
+    <div class="result-card" style="margin-bottom:16px">
+      <div class="result-section-title">🌱 成長建議</div>
+      <ul class="result-list" id="result-growth"></ul>
+    </div>
+
+    <div class="result-quote-card">
+      <div class="result-quote" id="result-quote"></div>
+    </div>
+
+    <div class="scores-wrap">
+      <div class="scores-title">你的六維分佈</div>
+      <div id="scores-bars"></div>
+    </div>
+
+    <!-- Radar Chart -->
+    <div class="radar-wrap">
+      <div class="radar-title">你的六維雷達圖</div>
+      <div class="radar-svg-wrap">
+        <svg id="radar-svg" width="300" height="300" viewBox="0 0 300 300"></svg>
+      </div>
+    </div>
+
+    <!-- Dimension Explanations -->
+    <div class="dim-explain-wrap">
+      <div class="dim-explain-title">六個向度是什麼？</div>
+      <div class="dim-explain-list">
+        <div class="dim-explain-item">
+          <div class="dim-explain-badge">AN</div>
+          <div class="dim-explain-body">
+            <div class="dim-explain-name">安心節奏</div>
+            <div class="dim-explain-desc">你傾向先求穩、求熟悉、求可預期。喜歡把事情問清楚再動，不喜歡被突發狀況打亂節奏，重視內在的安全感與秩序感。</div>
+          </div>
+        </div>
+        <div class="dim-explain-item">
+          <div class="dim-explain-badge">CA</div>
+          <div class="dim-explain-body">
+            <div class="dim-explain-name">關照共感</div>
+            <div class="dim-explain-desc">你會自然顧到別人的感受與場上氣氛。能在別人開口前就讀到細節，讓關係運轉順暢，是群體裡的柔性黏著劑。</div>
+          </div>
+        </div>
+        <div class="dim-explain-item">
+          <div class="dim-explain-badge">MO</div>
+          <div class="dim-explain-body">
+            <div class="dim-explain-name">即刻行動</div>
+            <div class="dim-explain-desc">你習慣先動起來，再邊做邊修。對機會和變化反應快，不喜歡被「想太多」困住，相信路是跑出來的。</div>
+          </div>
+        </div>
+        <div class="dim-explain-item">
+          <div class="dim-explain-badge">SP</div>
+          <div class="dim-explain-body">
+            <div class="dim-explain-name">表現存在</div>
+            <div class="dim-explain-desc">你在意被看見、被記得、被回應。很懂怎麼創造記憶點，對互動感高度敏銳，不想讓自己的存在像空氣一樣被略過。</div>
+          </div>
+        </div>
+        <div class="dim-explain-item">
+          <div class="dim-explain-badge">ST</div>
+          <div class="dim-explain-body">
+            <div class="dim-explain-name">穩場定力</div>
+            <div class="dim-explain-desc">你遇到混亂時，能把節奏收住、不讓局面散掉。給人成熟、可扛的感覺，別人慌的時候你反而能把話說慢、把事情釐清。</div>
+          </div>
+        </div>
+        <div class="dim-explain-item">
+          <div class="dim-explain-badge">GR</div>
+          <div class="dim-explain-body">
+            <div class="dim-explain-name">成長韌性</div>
+            <div class="dim-explain-desc">你就算會怕、會卡，也還是會慢慢往前。遇到挫折不會崩，而是會消化、調整、再試。有一種不顯山露水的耐力。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-restart" onclick="restartQuiz()">再測一次</button>
+  </div>
+
+</div>
+
+<script>
+  /* ════════════════════════════════════════
+     DATA
+  ════════════════════════════════════════ */
+  const QUESTIONS = [
+    {
+      text: "你在工作或課堂上，臨時被通知要補一段簡報內容，你通常會？",
+      options: [
+        { text: "先把需求問清楚，再開始補，免得後面一直返工。", dims: { AN: 2 } },
+        { text: "先看現場誰最卡，順手幫大家把缺的地方補上。", dims: { CA: 2 } },
+        { text: "先做一版丟出去，邊改邊調比較快。", dims: { MO: 2 } },
+        { text: "先把流程和優先順序排好，讓現場不要亂。", dims: { ST: 2 } },
+      ]
+    },
+    {
+      text: "跟朋友約吃飯，有人遲到快 40 分鐘，群組開始安靜，你比較可能？",
+      options: [
+        { text: "自己先找點事做，不讓整件事毀掉心情。", dims: { GR: 2 } },
+        { text: "在群組丟一句有點好笑的話，讓大家不要乾等到尷尬。", dims: { SP: 2 } },
+        { text: "先決定要不要點餐、換店或調整節奏。", dims: { MO: 2 } },
+        { text: "先把狀況問清楚，讓大家知道到底還要等多久。", dims: { ST: 2 } },
+      ]
+    },
+    {
+      text: "你隨手發的一篇貼文突然小爆紅，你多半會？",
+      options: [
+        { text: "看一看通知後先放著，等心情穩一點再回。", dims: { AN: 2 } },
+        { text: "挑幾則真心回覆，順便練習自己不要那麼躲。", dims: { GR: 2 } },
+        { text: "趁現在有感覺，再發一篇延伸內容。", dims: { MO: 2 } },
+        { text: "把最有趣的反應整理起來，讓這波熱度更有存在感。", dims: { SP: 2 } },
+      ]
+    },
+    {
+      text: "團隊合作時，有人一直改方向，大家開始各講各的，你會？",
+      options: [
+        { text: "提議先把目標寫下來，不然怎麼討論都會飄。", dims: { AN: 2 } },
+        { text: "先聽大家到底在卡什麼，再找能接受的中間點。", dims: { CA: 2 } },
+        { text: "選一條先試做看看，有結果比較好說話。", dims: { MO: 2 } },
+        { text: "先把分歧收斂成一版，讓事情能繼續往前。", dims: { ST: 2 } },
+      ]
+    },
+    {
+      text: "你喜歡的人回訊息變慢，你比較像是？",
+      options: [
+        { text: "先提醒自己別腦補，照原本節奏過生活。", dims: { AN: 2 } },
+        { text: "傳一則輕鬆、不逼人的訊息，讓對方知道你還在。", dims: { CA: 2 } },
+        { text: "直接找個時機把互動節奏講開。", dims: { MO: 2 } },
+        { text: "發一則若有似無的限動，看對方會不會有反應。", dims: { SP: 2 } },
+      ]
+    },
+    {
+      text: "家人突然請你幫忙一件你不太熟的事，你通常會？",
+      options: [
+        { text: "先把流程問清楚，知道怎麼做再接。", dims: { AN: 2 } },
+        { text: "先做做看，卡住再問，總比一直站著好。", dims: { GR: 2 } },
+        { text: "先接下來，讓對方感覺這件事有人一起扛。", dims: { CA: 2 } },
+        { text: "先把步驟拆開，不讓場面越幫越亂。", dims: { ST: 2 } },
+      ]
+    },
+    {
+      text: "朋友失戀來找你，你最像哪一種陪法？",
+      options: [
+        { text: "陪他吃點東西、坐一下，不急著給結論。", dims: { CA: 2 } },
+        { text: "先帶他出去走走，換個場景再說。", dims: { MO: 2 } },
+        { text: "幫他把今天剩下的生活節奏穩住。", dims: { ST: 2 } },
+        { text: "跟他說你也不是每次都撐得很好，但人會慢慢回來。", dims: { GR: 2 } },
+      ]
+    },
+    {
+      text: "你期待很久的聚會臨時取消，你會？",
+      options: [
+        { text: "有點失落，但很快改成自己的小行程。", dims: { GR: 2 } },
+        { text: "乾脆在群裡開新局，看誰還有空改約別的。", dims: { SP: 2 } },
+        { text: "先把新的時間敲定，不讓事情就這樣散掉。", dims: { ST: 2 } },
+        { text: "其實也還好，回到熟悉節奏反而有點安心。", dims: { AN: 2 } },
+      ]
+    },
+    {
+      text: "開會時，你腦中的點子被別人先講走了，你通常會？",
+      options: [
+        { text: "先記著，等到適合的時機再把自己的版本補完整。", dims: { AN: 2 } },
+        { text: "先把情緒壓一下，會後再想怎麼處理比較不內耗。", dims: { GR: 2 } },
+        { text: "當場接話補一句，讓大家知道你也有參與這個方向。", dims: { SP: 2 } },
+        { text: "先不糾結功勞，把方案能不能落地放前面。", dims: { ST: 2 } },
+      ]
+    },
+    {
+      text: "難得出遊，結果一到現場就下大雨，你通常會？",
+      options: [
+        { text: "盡量照原本安排縮小調整，不想整天被打亂。", dims: { AN: 2 } },
+        { text: "先看同行的人誰最受影響，把氣氛穩住比較重要。", dims: { CA: 2 } },
+        { text: "馬上查附近備案，今天照樣可以玩出別的版本。", dims: { MO: 2 } },
+        { text: "當成另類體驗，告訴自己狼狽也可以是回憶的一部分。", dims: { GR: 2 } },
+      ]
+    },
+    {
+      text: "你進到一個完全陌生的新群體，你多半會？",
+      options: [
+        { text: "先觀察規則、語氣和大家互動方式。", dims: { AN: 2 } },
+        { text: "先記幾個名字，找看起來好聊天的人慢慢接上。", dims: { CA: 2 } },
+        { text: "想到話題就直接丟，不然永遠不會熟。", dims: { SP: 2 } },
+        { text: "先做點小事、出一點力，讓自己慢慢找到位置。", dims: { GR: 2 } },
+      ]
+    },
+    {
+      text: "長期合作的對象今天情緒明顯不對，你通常會？",
+      options: [
+        { text: "先讓節奏慢下來，避免硬碰硬把事情弄更僵。", dims: { AN: 2 } },
+        { text: "用比較軟的方式問一句，看他是不是有事。", dims: { CA: 2 } },
+        { text: "把必要事項列清楚，至少今天不要再更亂。", dims: { ST: 2 } },
+        { text: "如果今天非解決不可，就直接開聊。", dims: { MO: 2 } },
+      ]
+    },
+    {
+      text: "你終於有一個完整空檔，你最想怎麼用？",
+      options: [
+        { text: "待在熟悉的地方，補眠、補能量、補安靜。", dims: { AN: 2 } },
+        { text: "約一個舒服的人見面，不用熱鬧也沒關係。", dims: { CA: 2 } },
+        { text: "去試一個新店、新展或新活動。", dims: { MO: 2 } },
+        { text: "拍點東西、發個文，替這天留下一點痕跡。", dims: { SP: 2 } },
+      ]
+    },
+    {
+      text: "要你當眾做 30 秒自我介紹，你通常會？",
+      options: [
+        { text: "講重點就好，安全過關最重要。", dims: { AN: 2 } },
+        { text: "讓大家感覺你是好相處的人，比厲害更重要。", dims: { CA: 2 } },
+        { text: "加一個小梗或記憶點，讓場子不要太平。", dims: { SP: 2 } },
+        { text: "就算緊張也先站上去，講完再說。", dims: { GR: 2 } },
+      ]
+    },
+    {
+      text: "你花很多時間做的事，成果卻很普通，你會？",
+      options: [
+        { text: "先讓自己消化一下，再回頭看哪裡能調整。", dims: { GR: 2 } },
+        { text: "找一個信得過的人聊聊，借一下別人的視角。", dims: { CA: 2 } },
+        { text: "立刻換方法再試一次，不想卡在原地太久。", dims: { MO: 2 } },
+        { text: "先把標準、節奏和期待值重新訂穩。", dims: { ST: 2 } },
+      ]
+    },
+    {
+      text: "朋友之間出現一點微妙誤會，你通常會？",
+      options: [
+        { text: "希望私下慢慢講開，不想把場面弄得太戲劇化。", dims: { AN: 2 } },
+        { text: "先確認每個人真正介意的是什麼。", dims: { CA: 2 } },
+        { text: "乾脆找個時間一次說清楚，省得拖長。", dims: { MO: 2 } },
+        { text: "先用一點幽默或存在感把氣氛解凍。", dims: { SP: 2 } },
+      ]
+    },
+  ];
+
+  const CHARACTERS = {
+    chiikawa: {
+      photo: "photos/chiikawa.png",
+      name: "吉伊卡娃型",
+      tagline: "看起來容易緊張，其實很會默默撐住自己。",
+      pattern: "你不是那種一進場就很有存在感的人，但你有一種很真實的在場感。你會怕尷尬、怕做不好、怕自己拖累別人，可是很多時候你最後還是會咬牙做到。你的可愛，不是無害，而是明明會抖，還願意往前。",
+      strengths: ["能感受到風險，也因此不容易太莽撞。", "有韌性，遇到挫折時會慢慢把自己撿回來。"],
+      blindspots: ["容易在開始前就先把自己嚇住。", "太在意別人怎麼想時，會壓掉自己的需求。"],
+      growth: ["幫自己設一個「先做 10 分鐘」的起步規則，不用一開始就要求完美。", "練習把「我不確定，但我願意試」說出口，會比一直悶著更省力。"],
+      quote: "我不是不怕，我只是每次都會慢慢把自己推過去。",
+    },
+    hachiware: {
+      photo: "photos/hachiware.png",
+      name: "小八型",
+      tagline: "溫柔不是附屬技能，是你的主動天賦。",
+      pattern: "你很會讓人覺得舒服，常常在別人還沒開口前，就先注意到細節。你不是高調控場型，但很會讓一段關係穩穩運轉。很多人覺得跟你相處很輕鬆，因為你會自然把刺磨平。",
+      strengths: ["很有共感力，能讀到別人的情緒與分寸。", "具備安定感，常常是群體裡的柔性黏著劑。"],
+      blindspots: ["太習慣照顧別人，容易晚一步照顧自己。", "為了不讓場面難看，可能把真實想法收太久。"],
+      growth: ["練習把「我其實比較想要的是⋯⋯」說得更直接。", "不必每次都當氣氛緩衝墊，偶爾讓別人自己面對自己的情緒。"],
+      quote: "我不是沒脾氣，我只是通常先選擇把人放進來。",
+    },
+    usagi: {
+      photo: "photos/usagi.png",
+      name: "兔兔型",
+      tagline: "先衝再說，很多路都是你跑出來的。",
+      pattern: "你很少把自己困在「想很久」裡。你喜歡動、喜歡試、喜歡有點刺激和新鮮感，也很能帶動別人的節奏。你不是沒在怕，只是你通常覺得，先卡住才真的可怕。",
+      strengths: ["行動力強，對機會和變化反應快。", "有感染力，容易把低氣壓的場面拉活。"],
+      blindspots: ["有時候切太快，身邊的人不一定跟得上。", "容易在興頭上答應太多，後面才發現體力不夠。"],
+      growth: ["大事先加一個停頓點，問自己一句「這是想試，還是真的適合？」", "帶人一起前進時，多補一句脈絡，會讓你的魅力更穩。"],
+      quote: "我不是亂衝，我只是相信路很多時候是跑出來的。",
+    },
+    momonga: {
+      photo: "photos/momonga.png",
+      name: "栗子饅頭型",
+      tagline: "穩不是慢，是你知道什麼叫不必亂。",
+      pattern: "你不太喜歡事情被搞得太浮，也不愛情緒滿場飛。你給人的感覺通常是成熟、穩、很能扛，別人慌的時候，你反而像是那個把杯子放好、把話說慢的人。你不一定最熱，但常常最讓人安心。",
+      strengths: ["穩場能力高，碰到混亂時不容易失速。", "判斷節奏準，知道什麼該立刻處理、什麼不必急。"],
+      blindspots: ["太習慣收住局面，可能顯得有點距離感。", "對低效率和失控容忍度低，容易默默不耐煩。"],
+      growth: ["練習多說一點自己的感受，不只說結論。", "有些人需要的不是標準答案，而是先被你理解一下。"],
+      quote: "我的冷靜不是無感，是知道什麼時候不用跟著亂。",
+    },
+    flying_squirrel: {
+      photo: "photos/flying_squirrel.png",
+      name: "飛鼠型",
+      tagline: "你不是愛演，你只是很需要被世界回應。",
+      pattern: "你很在意互動感。沒回應、沒火花、沒存在感，會讓你一下就覺得場子冷掉。你喜歡有趣、喜歡被注意，也很懂怎麼讓自己留下記憶點。你不一定是要當主角，但你真的不想當背景。",
+      strengths: ["表達感強，很會創造記憶點與氛圍。", "對回饋敏銳，懂得抓互動節奏。"],
+      blindspots: ["太依賴外部反應時，心情容易被牽著走。", "有時候嘴上鬧騰，真正脆弱的地方反而不講。"],
+      growth: ["練習分辨「我想被看見」和「我需要被肯定」是不一樣的事。", "當你想要反應時，試著直接講需求，會比繞路試探更輕鬆。"],
+      quote: "我不是吵，我只是希望我的存在不要像空氣一樣被略過。",
+    },
+    rakko: {
+      photo: "photos/rakko.png",
+      name: "海獺型",
+      tagline: "可靠不是天生無敵，是你習慣站前面。",
+      pattern: "你常常在別人還沒反應過來時，就先把事接住了。你不是只會硬扛的人，你也知道怎麼讓人安心、讓局面有方向。你身上有一種「有你在，好像就沒那麼可怕」的效果。",
+      strengths: ["抗壓與行動兼具，關鍵時刻很能扛。", "保護感強，會讓身邊的人覺得有後盾。"],
+      blindspots: ["太常扮演可靠的人，會忘記自己也需要支援。", "容易不自覺把責任全攬，累了也不說。"],
+      growth: ["練習把「這件事我們一起扛」講出來，不要只默默全接。", "把休息排進責任感裡，別等到耗盡才停。"],
+      quote: "我看起來很穩，是因為很多時候我選擇先站上去。",
+    },
+  };
+
+  /* ════════════════════════════════════════
+     STATE
+  ════════════════════════════════════════ */
+  let current = 0;
+  let answers = [];  // index of chosen option per question
+  let scores = { AN: 0, CA: 0, MO: 0, SP: 0, ST: 0, GR: 0 };
+
+  const LETTERS = ['A', 'B', 'C', 'D'];
+
+  /* ════════════════════════════════════════
+     FLOW
+  ════════════════════════════════════════ */
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startQuiz() {
+    current = 0;
+    answers = new Array(QUESTIONS.length).fill(null);
+    scores = { AN: 0, CA: 0, MO: 0, SP: 0, ST: 0, GR: 0 };
+    renderQuestion();
+    showScreen('screen-quiz');
+  }
+
+  function renderQuestion() {
+    const q = QUESTIONS[current];
+    const total = QUESTIONS.length;
+
+    document.getElementById('question-num').textContent =
+      `題目 ${String(current + 1).padStart(2, '0')}`;
+    document.getElementById('question-text').textContent = q.text;
+    document.getElementById('progress-count').textContent = `${current + 1} / ${total}`;
+    document.getElementById('progress-fill').style.width = `${(current / total) * 100}%`;
+
+    const list = document.getElementById('options-list');
+    list.innerHTML = '';
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn' + (answers[current] === i ? ' selected' : '');
+      btn.innerHTML = `
+        <span class="option-letter">${LETTERS[i]}</span>
+        <span class="option-text">${opt.text}</span>
+      `;
+      btn.onclick = () => selectOption(i);
+      list.appendChild(btn);
+    });
+
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.disabled = answers[current] === null;
+    nextBtn.textContent = current < total - 1 ? '下一題 →' : '查看結果 ✨';
+  }
+
+  function selectOption(i) {
+    answers[current] = i;
+    document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+      btn.classList.toggle('selected', idx === i);
+    });
+    document.getElementById('btn-next').disabled = false;
+  }
+
+  function nextQuestion() {
+    if (answers[current] === null) return;
+    current++;
+    if (current >= QUESTIONS.length) {
+      calculateResult();
+    } else {
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  /* ════════════════════════════════════════
+     SCORING
+  ════════════════════════════════════════ */
+  function calculateResult() {
+    scores = { AN: 0, CA: 0, MO: 0, SP: 0, ST: 0, GR: 0 };
+    answers.forEach((chosen, qi) => {
+      if (chosen === null) return;
+      const dims = QUESTIONS[qi].options[chosen].dims;
+      for (const [dim, val] of Object.entries(dims)) {
+        scores[dim] = (scores[dim] || 0) + val;
+      }
+    });
+
+    const { AN, CA, MO, SP, ST, GR } = scores;
+    const typeScores = {
+      chiikawa:        GR * 3 + AN * 2 + CA,
+      hachiware:       CA * 3 + AN + ST + GR,
+      usagi:           MO * 3 + SP * 2 + GR,
+      momonga:         ST * 3 + AN * 2 + CA,
+      flying_squirrel: SP * 3 + MO + CA + GR,
+      rakko:           ST * 2 + GR * 2 + MO + CA,
+    };
+
+    // Primary dims per type (for tiebreak)
+    const PRIMARY = {
+      chiikawa:        ['GR', 'AN'],
+      hachiware:       ['CA', 'ST'],
+      usagi:           ['MO', 'SP'],
+      momonga:         ['ST', 'AN'],
+      flying_squirrel: ['SP', 'MO'],
+      rakko:           ['ST', 'GR'],
+    };
+    const DIM_PRIORITY = ['ST', 'CA', 'GR', 'MO', 'AN', 'SP'];
+
+    let winner = Object.entries(typeScores).reduce((best, [key, val]) => {
+      if (val > best.val) return { key, val };
+      if (val === best.val) {
+        // tiebreak: compare primary dims
+        const [p1a] = PRIMARY[key];
+        const [p1b] = PRIMARY[best.key];
+        if (scores[p1a] !== scores[p1b]) return scores[p1a] > scores[p1b] ? { key, val } : best;
+        const [, p2a] = PRIMARY[key];
+        const [, p2b] = PRIMARY[best.key];
+        if (scores[p2a] !== scores[p2b]) return scores[p2a] > scores[p2b] ? { key, val } : best;
+        // global priority
+        for (const d of DIM_PRIORITY) {
+          if (PRIMARY[key].includes(d)) return { key, val };
+          if (PRIMARY[best.key].includes(d)) return best;
+        }
+      }
+      return best;
+    }, { key: null, val: -Infinity });
+
+    showResult(winner.key);
+  }
+
+  /* ════════════════════════════════════════
+     RESULT
+  ════════════════════════════════════════ */
+  function showResult(key) {
+    const c = CHARACTERS[key];
+
+    const iconWrap = document.getElementById('result-icon-wrap');
+    iconWrap.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = c.photo;
+    img.alt = c.name;
+    img.onerror = () => {
+      iconWrap.innerHTML = `
+        <div class="result-icon-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          <span>照片</span>
+        </div>`;
+    };
+    iconWrap.appendChild(img);
+    document.getElementById('result-name').textContent = c.name;
+    document.getElementById('result-tagline').textContent = c.tagline;
+    document.getElementById('result-pattern').textContent = c.pattern;
+    document.getElementById('result-quote').textContent = c.quote;
+
+    const strengthsEl = document.getElementById('result-strengths');
+    strengthsEl.innerHTML = c.strengths.map(s => `<li>${s}</li>`).join('');
+
+    const blindspotsEl = document.getElementById('result-blindspots');
+    blindspotsEl.innerHTML = c.blindspots.map(s => `<li>${s}</li>`).join('');
+
+    const growthEl = document.getElementById('result-growth');
+    growthEl.innerHTML = c.growth.map(s => `<li>${s}</li>`).join('');
+
+    // Score bars
+    const maxScore = Math.max(...Object.values(scores), 1);
+    const DIM_LABELS = { AN: '安心節奏', CA: '關照共感', MO: '即刻行動', SP: '表現存在', ST: '穩場定力', GR: '成長韌性' };
+    const barsEl = document.getElementById('scores-bars');
+    barsEl.innerHTML = Object.entries(scores)
+      .sort((a, b) => b[1] - a[1])
+      .map(([dim, val]) => `
+        <div class="score-row">
+          <span class="score-dim">${dim}</span>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width:${Math.round((val / maxScore) * 100)}%"></div>
+          </div>
+          <span class="score-val">${val}</span>
+        </div>
+      `).join('');
+
+    showScreen('screen-result');
+    // Draw radar after screen is visible so SVG has layout
+    requestAnimationFrame(() => drawRadar(scores));
+  }
+
+  function restartQuiz() {
+    showScreen('screen-intro');
+  }
+
+  /* ════════════════════════════════════════
+     RADAR CHART (hexagon, 6 dims)
+  ════════════════════════════════════════ */
+  function drawRadar(scores) {
+    const svg = document.getElementById('radar-svg');
+    svg.innerHTML = '';
+
+    const cx = 150, cy = 154, R = 105;
+    const LEVELS = 4;
+    // Dynamic max: highest actual score, minimum 8 so chart isn't too cramped
+    const MAX_SCORE = Math.max(...Object.values(scores), 8);
+
+    // Dimension order (clockwise from top)
+    const DIMS = [
+      { key: 'GR', label: '成長韌性', sub: 'GR' },
+      { key: 'AN', label: '安心節奏', sub: 'AN' },
+      { key: 'CA', label: '關照共感', sub: 'CA' },
+      { key: 'MO', label: '即刻行動', sub: 'MO' },
+      { key: 'SP', label: '表現存在', sub: 'SP' },
+      { key: 'ST', label: '穩場定力', sub: 'ST' },
+    ];
+    const N = DIMS.length;
+
+    function angle(i) {
+      return (Math.PI * 2 * i / N) - Math.PI / 2;
+    }
+
+    function pt(i, r) {
+      const a = angle(i);
+      return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+    }
+
+    function polygon(points, fill, stroke, strokeWidth, opacity) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      el.setAttribute('points', points.map(p => `${p.x},${p.y}`).join(' '));
+      el.setAttribute('fill', fill);
+      el.setAttribute('stroke', stroke);
+      el.setAttribute('stroke-width', strokeWidth);
+      if (opacity !== undefined) el.setAttribute('fill-opacity', opacity);
+      return el;
+    }
+
+    function line(x1, y1, x2, y2, stroke, width, opacity) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+      el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+      el.setAttribute('stroke', stroke);
+      el.setAttribute('stroke-width', width);
+      if (opacity) el.setAttribute('stroke-opacity', opacity);
+      return el;
+    }
+
+    // Grid hexagons + ring labels
+    for (let l = 1; l <= LEVELS; l++) {
+      const r = R * (l / LEVELS);
+      const pts = Array.from({ length: N }, (_, i) => pt(i, r));
+      svg.appendChild(polygon(pts, l === LEVELS ? 'rgba(180,83,9,0.03)' : 'none', '#D6D3D1', 1, undefined));
+
+      // Label on the top-right axis (between GR and AN)
+      const ringVal = Math.round(MAX_SCORE * l / LEVELS);
+      const labelAngle = angle(0) + (Math.PI * 2 / N) * 0.45;
+      const lx = cx + r * Math.cos(labelAngle);
+      const ly = cy + r * Math.sin(labelAngle);
+      const ringLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      ringLabel.setAttribute('x', lx);
+      ringLabel.setAttribute('y', ly);
+      ringLabel.setAttribute('text-anchor', 'middle');
+      ringLabel.setAttribute('dominant-baseline', 'middle');
+      ringLabel.setAttribute('font-family', 'DM Sans, sans-serif');
+      ringLabel.setAttribute('font-size', '9');
+      ringLabel.setAttribute('fill', '#A8A29E');
+      ringLabel.textContent = ringVal;
+      svg.appendChild(ringLabel);
+    }
+
+    // Axis lines
+    DIMS.forEach((_, i) => {
+      const p = pt(i, R);
+      svg.appendChild(line(cx, cy, p.x, p.y, '#D6D3D1', 1));
+    });
+
+    // Score polygon
+    const scorePts = DIMS.map((d, i) => {
+      const ratio = Math.min((scores[d.key] || 0) / MAX_SCORE, 1);
+      return pt(i, R * ratio);
+    });
+    const scorePoly = polygon(scorePts, '#B45309', '#B45309', 2, 0.2);
+    svg.appendChild(scorePoly);
+
+    // Score polygon border
+    const scoreBorder = polygon(scorePts, 'none', '#B45309', 2);
+    svg.appendChild(scoreBorder);
+
+    // Score dots
+    scorePts.forEach(p => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', p.x);
+      circle.setAttribute('cy', p.y);
+      circle.setAttribute('r', 4);
+      circle.setAttribute('fill', '#B45309');
+      svg.appendChild(circle);
+    });
+
+    // Labels
+    DIMS.forEach((d, i) => {
+      const a = angle(i);
+      const labelR = R + 26;
+      const lx = cx + labelR * Math.cos(a);
+      const ly = cy + labelR * Math.sin(a);
+
+      const ratio = Math.min((scores[d.key] || 0) / MAX_SCORE, 1);
+      const score = scores[d.key] || 0;
+
+      // Dim code
+      const code = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      code.setAttribute('x', lx);
+      code.setAttribute('y', ly - 6);
+      code.setAttribute('text-anchor', 'middle');
+      code.setAttribute('dominant-baseline', 'middle');
+      code.setAttribute('font-family', 'DM Sans, sans-serif');
+      code.setAttribute('font-size', '11');
+      code.setAttribute('font-weight', '700');
+      code.setAttribute('fill', '#B45309');
+      code.textContent = d.sub;
+      svg.appendChild(code);
+
+      // Dim label
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', lx);
+      label.setAttribute('y', ly + 8);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('dominant-baseline', 'middle');
+      label.setAttribute('font-family', 'DM Sans, sans-serif');
+      label.setAttribute('font-size', '10');
+      label.setAttribute('fill', '#78716C');
+      label.textContent = d.label;
+      svg.appendChild(label);
+
+      // Score value
+      const val = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      val.setAttribute('x', lx);
+      val.setAttribute('y', ly + 21);
+      val.setAttribute('text-anchor', 'middle');
+      val.setAttribute('dominant-baseline', 'middle');
+      val.setAttribute('font-family', 'DM Sans, sans-serif');
+      val.setAttribute('font-size', '10');
+      val.setAttribute('font-weight', '700');
+      val.setAttribute('fill', '#A8A29E');
+      val.textContent = score;
+      svg.appendChild(val);
+    });
+  }
+</script>
+</body>
+</html>
